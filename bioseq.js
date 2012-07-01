@@ -92,7 +92,7 @@ module.exports.transcribe = transcribe = function (seq) {
             out.push(chr);
         } else {
             // ENH - deal with ambiguity codes
-            throw "Sequence isn't a DNA alphabet!";
+            throw new Error("Sequence is not a DNA alphabet");
         }
     }
     return out.join('');
@@ -111,7 +111,7 @@ module.exports.backTranscribe = backTranscribe = function (seq) {
             out.push(chr);
         } else {
             // ENH - deal with ambiguity codes
-            throw "Sequence isn't an RNA alphabet!";
+            throw new Error("Sequence is not an RNA alphabet");
         }
     }
     return out.join('');
@@ -121,12 +121,12 @@ module.exports.backTranscribe = backTranscribe = function (seq) {
 // Translate a DNA or RNA sequence to protein
 module.exports.translate = translate = function (seq, codonTableId) {
     if (seq.length % 3) {
-        throw "Sequence length is not a multiple of 3 (i.e. ain't codons)";
+        throw new Error("Sequence length is not a multiple of 3");
     }
     // Default to the generic/universal codon table
     var codonTable = geneticcode.CodonTables[codonTableId || 1];
     if (codonTable == undefined) {
-        throw "Invalid codon table ID " + codonTableId;
+        throw new Error("Invalid codon table ID " + codonTableId);
     }
     var codon;
     var out = [];
