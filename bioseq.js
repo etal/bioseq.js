@@ -4,7 +4,7 @@
 // Distributed under the new BSD license; see the LICENSE file.
 
 // TODO:
-//  - figure out the Sequence object & namespacing
+//  - figure out namespacing
 // ENH:
 //  - use underscore to tighten up the code
 //  - jsdoc, is that a thing?
@@ -25,29 +25,7 @@ const AminoAcids3 = ['Ala', 'Cys', 'Asp', 'Glu', 'Phe', 'Gly', 'His', 'Ile',
                      'Thr', 'Val', 'Trp', 'Tyr'];
 const DnaComplements = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'};
 
-const CodonTables = {
-    1: {
-        'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L', 'TCT': 'S',
-        'TCC': 'S', 'TCA': 'S', 'TCG': 'S', 'TAT': 'Y', 'TAC': 'Y',
-        'TGT': 'C', 'TGC': 'C', 'TGG': 'W', 'CTT': 'L', 'CTC': 'L',
-        'CTA': 'L', 'CTG': 'L', 'CCT': 'P', 'CCC': 'P', 'CCA': 'P',
-        'CCG': 'P', 'CAT': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
-        'CGT': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R', 'ATT': 'I',
-        'ATC': 'I', 'ATA': 'I', 'ATG': 'M', 'ACT': 'T', 'ACC': 'T',
-        'ACA': 'T', 'ACG': 'T', 'AAT': 'N', 'AAC': 'N', 'AAA': 'K',
-        'AAG': 'K', 'AGT': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
-        'GTT': 'V', 'GTC': 'V', 'GTA': 'V', 'GTG': 'V', 'GCT': 'A',
-        'GCC': 'A', 'GCA': 'A', 'GCG': 'A', 'GAT': 'D', 'GAC': 'D',
-        'GAA': 'E', 'GAG': 'E', 'GGT': 'G', 'GGC': 'G', 'GGA': 'G',
-        'GGG': 'G', 'TAA': '*', 'TAG': '*', 'TGA': '*', 
-        // register_ncbi_table(name = 'Standard',
-        //                     alt_name = 'SGC0', id = 1,
-        //                     stop_codons = [ 'TAA', 'TAG', 'TGA', ],
-        //                     start_codons = [ 'TTG', 'CTG', 'ATG', ]
-    },
-    // TODO - define all 11 genetic codes from NCBI
-};
-module.exports.CodonTables = CodonTables
+geneticcode = require('./geneticcode');
 
 // ---------------------------------------------------------------------
 // Functions on strings
@@ -140,24 +118,25 @@ module.exports.backTranscribe = backTranscribe = function (seq) {
 }
 
 
-// translate a DNA or RNA sequence to protein
-// XXX Y U NO WORK
+// Translate a DNA or RNA sequence to protein
 module.exports.translate = translate = function (seq, codonTableId) {
-    if (arguments.length < 2) {
-        // Default to the generic codon table
-        codonTableId = 1;
-    }
     if (seq.length % 3) {
-        throw "Sequence length is not a multiple of 3";
+        throw "Sequence length is not a multiple of 3 (i.e. ain't codons)";
     }
-    var codonTable = CodonTables[codonTableId];
+    // Default to the generic/universal codon table
+    var codonTable = geneticcode.CodonTables[codonTableId || 1];
+    if (codonTable == undefined) {
+        throw "Invalid codon table ID " + codonTableId;
+    }
     var codon;
     var out = [];
     if (seq.indexOf('U') != -1) {
-        // Codon tables are for DNA, not RNA
-        seq = backTranscribe(seq)
+        // Codon tables are for DNA, not RNA, but we can compensate
+        // XXX Biologically, it should be the other way...
+        console.warn("Back-transcribing RNA to DNA for translation");
+        seq = backTranscribe(seq);
     }
-    for (var i; i < seq.length/3; i++) {
+    for (var i = 0; i < seq.length/3; i++) {
         codon = seq.slice(i*3, (i+1)*3);
         out.push(codonTable[codon]);
     }
@@ -192,9 +171,6 @@ function Sequence(data, id, description, alphabet, features, annot) {
     this.alphabet = alphabet;
     this.features = features;
     this.annot = annot;
-    // return { "data": data, "id": id, "description": description,
-    //     "alphabet": alphabet, "features": features, "annot": annot,
-    // }
 }
 // Convert the global functions into methods that apply to the data attribute
 // ENH - automate this somehow
