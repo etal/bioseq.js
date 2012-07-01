@@ -3,11 +3,10 @@
 // Copyright (c) 2012 Eric Talevich. All rights reserved.
 // Distributed under the new BSD license; see the LICENSE file.
 
-// TODO:
-//  - figure out namespacing
 // ENH:
-//  - use underscore to tighten up the code
-//  - jsdoc, is that a thing?
+//  - use Array functions to tighten up the code
+//  - JSDoc
+//  - figure out namespacing for browser-side use
 
 // (function() {
 // var bioseq = {};
@@ -78,7 +77,6 @@ module.exports.reverseComplement = reverseComplement = function (seq) {
     return out.join('');
 }
 
-
 // Transcribe a DNA sequence to RNA
 module.exports.transcribe = transcribe = function (seq) {
     var chr;
@@ -117,12 +115,8 @@ module.exports.backTranscribe = backTranscribe = function (seq) {
     return out.join('');
 }
 
-
 // Translate a DNA or RNA sequence to protein
 module.exports.translate = translate = function (seq, codonTableId) {
-    // if (seq.length % 3) {
-    //     throw new Error("Sequence length is not a multiple of 3");
-    // }
     // Default to the generic/universal codon table
     var codonTable = geneticcode.CodonTables[codonTableId || 1];
     if (codonTable == undefined) {
@@ -210,7 +204,7 @@ module.exports.Sequence = Sequence;
 // ---------------------------------------------------------------------
 // I/O
 
-// TODO - sort out the API
+// TODO - sort out the API for multiple formats, file I/O
 
 module.exports.readFasta = readFasta = function (textblock) {
     var line, spaceloc, seqId, seqDescr, seqData = [];

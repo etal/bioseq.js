@@ -1,0 +1,29 @@
+=========
+BioSeq.js
+=========
+
+Javascript implementation of a biomolecular sequence object, standard
+functions/methods for sequence manipulation, and I/O for the FASTA format.
+
+Designed for server-side Javascript, namely Node.js. I'm not sure what tweaks
+are needed to make it useful client-side.
+
+
+Contents
+--------
+
+Functions:
+    letterCounts, letterFrequencies
+    complement, reverseComplement
+    transcribe, backTranscribe
+    translate, translate3frames, translate6frames
+
+Sequence class:
+    - Attributes are data (the character sequence), sequence id, sequence
+      description, alphabet, features, and arbitrary annotations (the last three
+      don't do anything yet)
+    - Methods are all the above functions
+
+I/O:
+    FASTA
+
