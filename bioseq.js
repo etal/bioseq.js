@@ -71,7 +71,7 @@ module.exports.reverseComplement = reverseComplement = function (seq) {
     // ENH: warn about non-DNA characters
     var out = [];
     // Traverse the string in reverse
-    for (var i = seq.length - 1; i != 0; i++) {
+    for (var i = seq.length - 1; i != 0; i--) {
         // Swap base pairs
         out.push(DnaComplements[seq[i]]);
     }
@@ -120,9 +120,9 @@ module.exports.backTranscribe = backTranscribe = function (seq) {
 
 // Translate a DNA or RNA sequence to protein
 module.exports.translate = translate = function (seq, codonTableId) {
-    if (seq.length % 3) {
-        throw new Error("Sequence length is not a multiple of 3");
-    }
+    // if (seq.length % 3) {
+    //     throw new Error("Sequence length is not a multiple of 3");
+    // }
     // Default to the generic/universal codon table
     var codonTable = geneticcode.CodonTables[codonTableId || 1];
     if (codonTable == undefined) {
@@ -136,7 +136,7 @@ module.exports.translate = translate = function (seq, codonTableId) {
         console.warn("Back-transcribing RNA to DNA for translation");
         seq = backTranscribe(seq);
     }
-    for (var i = 0; i < seq.length/3; i++) {
+    for (var i = 0; i < Math.floor(seq.length/3); i++) {
         codon = seq.slice(i*3, (i+1)*3);
         out.push(codonTable[codon]);
     }
@@ -153,7 +153,7 @@ module.exports.translate3frames = translate3frames = function (seq, codonTableId
 module.exports.translate6frames = translate6frames = function (seq, codonTableId) {
     var forward = translate3frames(seq, codonTableId);
     var reverse = translate3frames(reverseComplement(seq), codonTableId);
-    return forward + reverse;
+    return forward.concat(reverse);
 }
 
 module.exports.ungap = ungap = function (seq) {
