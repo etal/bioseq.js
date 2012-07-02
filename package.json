@@ -1,0 +1,14 @@
+{ "name": "bioseq"
+, "version": "0.0.0"
+, "description": "Simple biomolecular sequence processing."
+, "author": "Eric Talevich"
+, "keywords": ["bioinformatics", "biology", "dna", "protein", "science"]
+, "homepage": "http://github.com/etal/bioseq.js"
+, "bugs": {"url": "https://github.com/etal/bioseq.js/issues"}
+, "repository":
+    { "type" : "git"
+    , "url" : "https://github.com/etal/bioseq.js.git"
+    }
+, "main": "./bioseq.js"
+, "engines": { "node": "*" }
+}
