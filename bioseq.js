@@ -175,28 +175,36 @@ Sequence.prototype.letterFrequencies = function () {
     return letterFrequencies(this.data);
 }
 Sequence.prototype.complement = complement = function () {
-    return complement(this.data);
+    return new Sequence(complement(this.data),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.reverseComplement = function () {
-    return reverseComplement(this.data);
+    return new Sequence(reverseComplement(this.data),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.transcribe = function () {
-    return transcribe(this.data);
+    return new Sequence(transcribe(this.data),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.backTranscribe = function () {
-    return backTranscribe(this.data);
+    return new Sequence(backTranscribe(this.data),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.translate = function (codonTableId) {
-    return translate(this.data, codonTableId);
+    return new Sequence(translate(this.data, codonTableId),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.translate3frames = function (codonTableId) {
-    return translate3frames(this.data, codonTableId);
+    return new Sequence(translate3frames(this.data, codonTableId),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.translate6frames = function (codonTableId) {
-    return translate6frames(this.data, codonTableId);
+    return new Sequence(translate6frames(this.data, codonTableId),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 Sequence.prototype.ungap = function () {
-    return ungap(this.data);
+    return new Sequence(ungap(this.data),
+            this.id, this.description, this.alphabet, this.features, this.annot);
 }
 module.exports.Sequence = Sequence;
 
