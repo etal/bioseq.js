@@ -1,4 +1,4 @@
-const CodonTables = {
+exports.CodonTables = CodonTables = {
     1: {
         'AAA': 'K', 'AAC': 'N', 'AAG': 'K', 'AAT': 'N',
         'ACA': 'T', 'ACC': 'T', 'ACG': 'T', 'ACT': 'T',
@@ -23,5 +23,4 @@ const CodonTables = {
     },
     // TODO - define all the genetic codes from NCBI
 };
-module.exports.CodonTables = CodonTables;
 

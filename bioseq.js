@@ -24,14 +24,14 @@ const AminoAcids3 = ['Ala', 'Cys', 'Asp', 'Glu', 'Phe', 'Gly', 'His', 'Ile',
                      'Thr', 'Val', 'Trp', 'Tyr'];
 const DnaComplements = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'};
 
-geneticcode = require('./geneticcode');
+geneticcode = require('./geneticcode.js');
 
 // ---------------------------------------------------------------------
 // Functions on strings
 
 // Count each type of letter in the seq
 // ENH - accept an alphabet as an optional argument; initialize counts with it
-module.exports.letterCounts = letterCounts = function (seq) {
+exports.letterCounts = letterCounts = function (seq) {
     var counts = {};
     for (var i in seq) {
         chr = seq[i];
@@ -41,7 +41,7 @@ module.exports.letterCounts = letterCounts = function (seq) {
 }
 
 // Get the frequency of each letter in the sequence (all sum to 1)
-module.exports.letterFrequencies = letterFrequencies = function (seq) {
+exports.letterFrequencies = letterFrequencies = function (seq) {
     var total = 0;
     var counts = letterCounts(seq);
     // sum the counts [like sum(counts.values())]
@@ -56,7 +56,7 @@ module.exports.letterFrequencies = letterFrequencies = function (seq) {
     return freqs;
 }
 
-module.exports.complement = complement = function (seq) {
+exports.complement = complement = function (seq) {
     // ENH: warn about non-DNA characters
     var out = [];
     for (var i in seq) {
@@ -66,7 +66,7 @@ module.exports.complement = complement = function (seq) {
     return out.join('');
 }
 
-module.exports.reverseComplement = reverseComplement = function (seq) {
+exports.reverseComplement = reverseComplement = function (seq) {
     // ENH: warn about non-DNA characters
     var out = [];
     // Traverse the string in reverse
@@ -78,7 +78,7 @@ module.exports.reverseComplement = reverseComplement = function (seq) {
 }
 
 // Transcribe a DNA sequence to RNA
-module.exports.transcribe = transcribe = function (seq) {
+exports.transcribe = transcribe = function (seq) {
     var chr;
     var out = [];
     // Replace all T with U
@@ -97,7 +97,7 @@ module.exports.transcribe = transcribe = function (seq) {
 }
 
 // Transcribe an RNA sequence back to DNA
-module.exports.backTranscribe = backTranscribe = function (seq) {
+exports.backTranscribe = backTranscribe = function (seq) {
     var chr;
     var out = [];
     // Replace all U with T
@@ -116,7 +116,7 @@ module.exports.backTranscribe = backTranscribe = function (seq) {
 }
 
 // Translate a DNA or RNA sequence to protein
-module.exports.translate = translate = function (seq, codonTableId) {
+exports.translate = translate = function (seq, codonTableId) {
     // Default to the generic/universal codon table
     var codonTable = geneticcode.CodonTables[codonTableId || 1];
     if (codonTable == undefined) {
@@ -137,20 +137,20 @@ module.exports.translate = translate = function (seq, codonTableId) {
     return out.join('');
 }
 
-module.exports.translate3frames = translate3frames = function (seq, codonTableId) {
+exports.translate3frames = translate3frames = function (seq, codonTableId) {
     // ENH - use _.map()
     return [translate(seq, codonTableId),
             translate(seq.slice(1), codonTableId),
             translate(seq.slice(2), codonTableId)];
 }
 
-module.exports.translate6frames = translate6frames = function (seq, codonTableId) {
+exports.translate6frames = translate6frames = function (seq, codonTableId) {
     var forward = translate3frames(seq, codonTableId);
     var reverse = translate3frames(reverseComplement(seq), codonTableId);
     return forward.concat(reverse);
 }
 
-module.exports.ungap = ungap = function (seq) {
+exports.ungap = ungap = function (seq) {
     return seq.split('-').join('');
 }
 
@@ -206,7 +206,7 @@ Sequence.prototype.ungap = function () {
     return new Sequence(ungap(this.data),
             this.id, this.description, this.alphabet, this.features, this.annot);
 }
-module.exports.Sequence = Sequence;
+exports.Sequence = Sequence;
 
 
 // ---------------------------------------------------------------------
@@ -214,7 +214,7 @@ module.exports.Sequence = Sequence;
 
 // TODO - sort out the API for multiple formats, file I/O
 
-module.exports.readFasta = readFasta = function (textblock) {
+exports.readFasta = readFasta = function (textblock) {
     var line, spaceloc, seqId, seqDescr, seqData = [];
     var sequences = [];
     var lines = textblock.split("\n");
@@ -245,7 +245,7 @@ module.exports.readFasta = readFasta = function (textblock) {
     return sequences;
 }
 
-module.exports.toFasta = writeFasta = function (seq) {
+exports.toFasta = toFasta = function (seq) {
     result = ">" + seq.id;
     if (seq.description) {
         result += " " + seq.description;
