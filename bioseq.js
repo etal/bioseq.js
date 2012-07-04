@@ -214,7 +214,7 @@ exports.Sequence = Sequence;
 
 // TODO - sort out the API for multiple formats, file I/O
 
-exports.readFasta = readFasta = function (textblock) {
+exports.parseFasta = parseFasta = function (textblock) {
     var line, spaceloc, seqId, seqDescr, seqData = [];
     var sequences = [];
     var lines = textblock.split("\n");

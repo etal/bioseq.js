@@ -16,7 +16,7 @@ bs.translate6frames(rawseq);
 bs.ungap(rawseq);
 
 // Methods on the Sequence object
-myseq = bs.readFasta(">myseq hey hey hey\n" + rawseq)[0];
+myseq = bs.parseFasta(">myseq hey hey hey\n" + rawseq)[0];
 
 myrnaseq = myseq.transcribe();
 myrnaseq.backTranscribe();
