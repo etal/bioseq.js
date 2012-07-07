@@ -151,7 +151,7 @@ exports.translate6frames = translate6frames = function (seq, codonTableId) {
 }
 
 exports.ungap = ungap = function (seq) {
-    return seq.split('-').join('');
+    return seq.replace(/[-\.]+/g, '');
 }
 
 
