@@ -17,12 +17,19 @@
 // Alphabets
 const DnaBases = ['A', 'C', 'G', 'T'];
 const RnaBases = ['A', 'C', 'G', 'U'];
+const DnaComplements = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'};
 const AminoAcids = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L',
                     'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y'];
 const AminoAcids3 = ['Ala', 'Cys', 'Asp', 'Glu', 'Phe', 'Gly', 'His', 'Ile',
                      'Lys', 'Leu', 'Met', 'Asn', 'Pro', 'Gln', 'Arg', 'Ser',
                      'Thr', 'Val', 'Trp', 'Tyr'];
-const DnaComplements = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'};
+// Build lookup tables based on the above
+var AminoAcids3to1 = {}
+var AminoAcids1to3 = {}
+for (var i in AminoAcids) {
+    AminoAcids3to1[AminoAcids3[i]] = AminoAcids[i]
+    AminoAcids1to3[AminoAcids[i]] = AminoAcids3[i]
+}
 
 geneticcode = require('./geneticcode.js');
 
@@ -56,6 +63,8 @@ exports.letterFrequencies = letterFrequencies = function (seq) {
     return freqs;
 }
 
+// Replace DNA bases with their complement (opposite strand).
+// The resulting sequence runs 3' to 5'.
 exports.complement = complement = function (seq) {
     // ENH: warn about non-DNA characters
     var out = [];
@@ -66,6 +75,8 @@ exports.complement = complement = function (seq) {
     return out.join('');
 }
 
+// Reverse and complement DNA bases as they would appear on the opposite strand.
+// The resulting sequence runs 5' to 3'.
 exports.reverseComplement = reverseComplement = function (seq) {
     // ENH: warn about non-DNA characters
     var out = [];
@@ -73,6 +84,24 @@ exports.reverseComplement = reverseComplement = function (seq) {
     for (var i = seq.length - 1; i >= 0; i--) {
         // Swap base pairs
         out.push(DnaComplements[seq[i]]);
+    }
+    return out.join('');
+}
+
+// Convert a protein string to a list of 3-letter codes.
+exports.protein1to3 = protein1to3 = function (seq) {
+    var out = [];
+    for (var i in seq) {
+        out[i] = AminoAcids1to3[seq[i]]
+    }
+    return out;
+}
+
+// Convert a list of 3-letter amino acid codes to a protein string.
+exports.protein3to1 = protein3to1 = function (codes) {
+    var out = [];
+    for (var i in codes) {
+        out[i] = AminoAcids3to1[codes[i]]
     }
     return out.join('');
 }
@@ -181,6 +210,9 @@ Sequence.prototype.complement = complement = function () {
 Sequence.prototype.reverseComplement = function () {
     return new Sequence(reverseComplement(this.data),
             this.id, this.description, this.alphabet, this.features, this.annot);
+}
+Sequence.prototype.protein1to3 = function () {
+    return protein1to3(this.data);
 }
 Sequence.prototype.transcribe = function () {
     return new Sequence(transcribe(this.data),
